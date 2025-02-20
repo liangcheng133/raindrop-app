@@ -1,6 +1,6 @@
 {
   "miniprogramRoot": "./dist",
-  "projectname": "myApp",
+  "projectname": "raindrop blog",
   "description": "博客",
   "appid": "touristappid",
   "setting": {
