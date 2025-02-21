@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./dist",
-  "projectname": "raindrop blog",
-  "description": "博客",
+  "projectname": "raindropApp",
+  "description": "博客项目",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,
