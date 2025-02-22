@@ -1,11 +1,12 @@
 export default defineAppConfig({
   pages: [
-    'pages/index/index'
+    'pages/shelfLife/index',
+    'pages/index/index',
   ],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: 'WeChat',
+    navigationBarTitleText: 'Raindrop Blog',
     navigationBarTextStyle: 'black'
   }
 })

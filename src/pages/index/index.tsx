@@ -1,5 +1,6 @@
+import { Layout } from '@/components'
 import { Button } from '@taroify/core'
-import { Text, View } from '@tarojs/components'
+import { Text } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
 import './index.less'
 
@@ -9,9 +10,9 @@ export default function Index() {
   })
 
   return (
-    <View className='index'>
+    <Layout>
       <Text>Hello world!</Text>
       <Button>按钮测试</Button>
-    </View>
+    </Layout>
   )
 }
