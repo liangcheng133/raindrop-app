@@ -1,21 +1,30 @@
-import { FieldDatetimePicker, Layout } from '@/components'
-import { Cell, Field, Form, Input, Radio } from '@taroify/core'
+import { Layout, RDatetimePicker } from '@/components'
+import RSelect from '@/components/RSelect'
+import { cloneDeep } from '@/utils'
+import { Cell, Field, Form, Input } from '@taroify/core'
 import { View } from '@tarojs/components'
-import { cloneDeep } from 'es-toolkit'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import './index.less'
 
-const defaultForm = {
-  method: '1'
-}
+const defaultForm = {}
+
+const dayOptions = [
+  { label: '90天', value: 90 },
+  { label: '180天', value: 180 },
+  { label: '365天', value: 365 }
+]
 
 /** 保质期管理 */
 const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
   const [formData, setFormData] = useState(cloneDeep(defaultForm))
   const formRef = useRef()
-  useEffect(() => {
-    console.log(formRef.current)
-  }, [formRef])
+
+  const onFieldChange = (name: string, value: any) => {
+    setFormData({
+      ...formData,
+      [name]: value
+    })
+  }
 
   return (
     <Layout>
@@ -32,15 +41,19 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
         <Cell.Group inset>
           <Field label='生产日期' name='produced_time' isLink>
             {(controller) => (
-              <FieldDatetimePicker {...controller} title='生产日期' placeholder='请选择生产日期' type='date' />
+              <RDatetimePicker {...controller} title='生产日期' placeholder='请选择生产日期' type='date' />
             )}
           </Field>
-          <Field label='计算方式' name='method' required rules={[{ required: true, message: '请选择计算方式' }]}>
-            <Radio.Group direction='horizontal'>
-              <Radio name='1'>按天</Radio>
-              <Radio name='2'>按月</Radio>
-              <Radio name='3'>自选</Radio>
-            </Radio.Group>
+          <Field
+            label='过期天数'
+            name='expiration_day'
+            required
+            isLink
+            clickable
+            rules={[{ required: true, message: '请填写过期天数' }]}>
+            {(controller) => (
+              <RSelect {...controller} title='过期天数' placeholder='请选择过期天数' options={dayOptions} />
+            )}
           </Field>
           <Field
             label='过期日期'
@@ -50,7 +63,7 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
             clickable
             rules={[{ required: true, message: '请填写过期日期' }]}>
             {(controller) => (
-              <FieldDatetimePicker {...controller} title='过期日期' placeholder='请选择过期日期' type='date' />
+              <RDatetimePicker {...controller} title='过期日期' placeholder='请选择过期日期' type='date' />
             )}
           </Field>
         </Cell.Group>

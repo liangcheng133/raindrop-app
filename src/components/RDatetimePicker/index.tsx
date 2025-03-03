@@ -1,13 +1,13 @@
+import { isEmpty } from '@/utils/validate'
 import { DatetimePicker, Input, Popup } from '@taroify/core'
 import { DatetimePickerProps } from '@taroify/core/datetime-picker/datetime-picker'
 import { useSafeState } from 'ahooks'
 import dayjs, { Dayjs } from 'dayjs'
-import { isNil } from 'es-toolkit'
 import { forwardRef } from 'react'
 
-export interface FieldDatetimePickerRef {}
+export interface RDatetimePickerRef {}
 
-export interface FieldDatetimePickerProps extends Omit<DatetimePickerProps, 'onChange' | 'value' | 'onConfirm'> {
+export interface RDatetimePickerProps extends Omit<DatetimePickerProps, 'onChange' | 'value' | 'onConfirm'> {
   placeholder?: string
   disabled?: boolean
   value?: string | Date | Dayjs | undefined
@@ -27,7 +27,7 @@ const formatObj = {
 }
 
 /** 日期时间选择器 */
-const FieldDatetimePicker = forwardRef<FieldDatetimePickerRef, FieldDatetimePickerProps>((props, ref) => {
+const RDatetimePicker = forwardRef<RDatetimePickerRef, RDatetimePickerProps>((props, ref) => {
   const { value, disabled, placeholder, title, onChange, onConfirm, valueFormat, type, ...rest } = props
 
   const valueFormatStr = valueFormat || formatObj[type!] || 'YYYY-MM-DD HH:mm:ss'
@@ -35,13 +35,14 @@ const FieldDatetimePicker = forwardRef<FieldDatetimePickerRef, FieldDatetimePick
   const [visible, setVisible] = useSafeState(false)
 
   const formatValue = (val: string | Date | Dayjs | undefined) => {
-    if (isNil(val) || !val) return ''
+    if (isEmpty(val)) return ''
     return dayjs(val).format(valueFormatStr)
   }
 
   const handleConfirm = (newValue: Date) => {
-    onChange && onChange(formatValue(newValue))
-    onConfirm && onConfirm(formatValue(newValue))
+    const value = formatValue(newValue)
+    onChange && onChange(value)
+    onConfirm && onConfirm(value)
     setVisible(false)
   }
 
@@ -72,4 +73,4 @@ const FieldDatetimePicker = forwardRef<FieldDatetimePickerRef, FieldDatetimePick
   )
 })
 
-export default FieldDatetimePicker
+export default RDatetimePicker
