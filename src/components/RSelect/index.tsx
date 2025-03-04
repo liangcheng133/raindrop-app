@@ -1,14 +1,18 @@
+import { classNameBind } from '@/utils/classnamesBind'
+import { isArray, isString } from '@/utils/validate'
 import { Cell, Input, Navbar, Popup, SafeArea } from '@taroify/core'
 import { ScrollView } from '@tarojs/components'
 import { useSafeState } from 'ahooks'
 import { forwardRef, useEffect } from 'react'
-import './index.less'
+import styles from './index.less'
+
+const cx = classNameBind(styles)
+
+type ValueType = string | string[] | undefined
+
+type OptionType = { label: string; value: string }
 
 export interface RSelectRef {}
-
-type ValueType = string | string[] | number | number[] | undefined
-
-type OptionType = { label: string; value: string | number }
 
 export interface RSelectProps {
   value?: ValueType
@@ -21,15 +25,14 @@ export interface RSelectProps {
   title?: string
   /** 值变化回调，用于Field时，可自动赋值表单项 */
   onChange?: (value: ValueType) => void
-  onConfirm?: (value: ValueType) => void
 }
 
 /** 单项/多项选择器 */
 const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
-  const { value, disabled, placeholder, title, onChange, onConfirm, options, multi, ...rest } = props
+  const { value, disabled, placeholder, title, onChange, options, multi, ...rest } = props
 
   const [visible, setVisible] = useSafeState(false)
-  const [selectedValue, setSelectedValue] = useSafeState<string[] | number[]>([])
+  const [selectedValue, setSelectedValue] = useSafeState<string[]>([])
 
   const updateValue = () => {
     if (multi) {
@@ -38,11 +41,7 @@ const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
         return
       }
     } else {
-      // typeof value === 'string' | typeof value === 'number'  这样子写eslint会报错，不明原因
-      if (typeof value === 'string') {
-        setSelectedValue([value])
-        return
-      } else if (typeof value === 'number') {
+      if (isString(value)) {
         setSelectedValue([value])
         return
       }
@@ -50,17 +49,34 @@ const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
     setSelectedValue([])
   }
 
-  const formatValue = (option: ValueType) => {
+  const formatValue = (values: ValueType) => {
+    if (isString(values)) {
+      return options?.find((item) => item.value === values)?.label
+    } else if (isArray(values)) {
+      return (options?.filter((item) => values?.includes(item.value)).map((item) => item.label) ?? []).join(',')
+    }
     return ''
   }
 
-  const handleSelect = (item: OptionType) => {}
+  const handleSelect = (item: OptionType) => {
+    if (multi) {
+      if (selectedValue.includes(item.value)) {
+        setSelectedValue(selectedValue.filter((v) => v !== item.value))
+      } else {
+        setSelectedValue([...selectedValue, item.value])
+      }
+    } else {
+      setSelectedValue([item.value])
+    }
+  }
 
-  const handleConfirm = (newValue) => {
-    // const value = formatValue(newValue)
-    // onChange && onChange(value)
-    // onConfirm && onConfirm(value)
-    // setVisible(false)
+  const handleConfirm = () => {
+    if (multi) {
+      onChange && onChange(selectedValue)
+    } else {
+      onChange && onChange(selectedValue[0])
+    }
+    setVisible(false)
   }
 
   useEffect(() => {
@@ -80,13 +96,16 @@ const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
         <Navbar className='r-select-navbar'>
           <Navbar.NavLeft icon={false}>取消</Navbar.NavLeft>
           <Navbar.Title>{title}</Navbar.Title>
-          <Navbar.NavRight>确认</Navbar.NavRight>
+          <Navbar.NavRight onClick={handleConfirm}>确认</Navbar.NavRight>
         </Navbar>
         <ScrollView className='r-select-content' scrollY>
           <Cell.Group>
             {options?.map((item) => {
               return (
-                <Cell key={item.value} onClick={() => handleSelect(item)}>
+                <Cell
+                  className={cx(selectedValue.includes(item.value) && 'active')}
+                  key={item.value}
+                  onClick={() => handleSelect(item)}>
                   {item.label}
                 </Cell>
               )

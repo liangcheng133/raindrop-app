@@ -9,9 +9,9 @@ import './index.less'
 const defaultForm = {}
 
 const dayOptions = [
-  { label: '90天', value: 90 },
-  { label: '180天', value: 180 },
-  { label: '365天', value: 365 }
+  { label: '90天', value: '90' },
+  { label: '180天', value: '180' },
+  { label: '365天', value: '365' }
 ]
 
 /** 保质期管理 */
