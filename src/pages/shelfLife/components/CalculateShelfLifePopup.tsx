@@ -2,7 +2,7 @@ import { Field, Form, Popup, Radio } from '@taroify/core'
 import { ScrollView } from '@tarojs/components'
 import { useSafeState } from 'ahooks'
 import { forwardRef, useImperativeHandle } from 'react'
-import '../index.less'
+import './comm.less'
 
 export interface CalculateShelfLifePopupProps {}
 
@@ -34,6 +34,7 @@ const CalculateShelfLifePopup = forwardRef<CalculateShelfLifePopupRef, Calculate
             <Radio.Group direction='horizontal'>
               <Radio name='1'>按天</Radio>
               <Radio name='2'>按月</Radio>
+              <Radio name='3'>按月</Radio>
             </Radio.Group>
           </Field>
         </Form>

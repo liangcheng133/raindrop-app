@@ -1,9 +1,12 @@
 import { Layout, RDatetimePicker } from '@/components'
 import RSelect from '@/components/RSelect'
-import { cloneDeep } from '@/utils'
-import { Cell, Field, Form, Input } from '@taroify/core'
+import { showToast } from '@/utils'
+import { cx } from '@/utils/classnamesBind'
+import { Button, Cell, Field, FixedView, Flex, Form, Input, Textarea } from '@taroify/core'
+import { FormController, FormInstance } from '@taroify/core/form'
 import { View } from '@tarojs/components'
-import React, { useRef, useState } from 'react'
+import { useSafeState } from 'ahooks'
+import React, { useRef } from 'react'
 import './index.less'
 
 const defaultForm = {}
@@ -14,26 +17,50 @@ const dayOptions = [
   { label: '365天', value: '365' }
 ]
 
+const typeOptions = [
+  { label: '食品', value: 'sp' },
+  { label: '医疗', value: 'yl' },
+  { label: '宠物', value: 'cw' }
+]
+
 /** 保质期管理 */
 const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
-  const [formData, setFormData] = useState(cloneDeep(defaultForm))
-  const formRef = useRef()
+  const [showPlaceholder, setShowPlaceholder] = useSafeState<boolean>(true)
+  const formRef = useRef<FormInstance>()
 
-  const onFieldChange = (name: string, value: any) => {
-    setFormData({
-      ...formData,
-      [name]: value
-    })
+  const onFieldChange = (name: string, value: any, controller?: FormController<any>) => {
+    if (name === 'remark') {
+      setShowPlaceholder(value.length === 0)
+    }
+    controller?.onChange?.(value)
+  }
+
+  const onResetForm = () => {
+    formRef?.current?.reset()
+    setShowPlaceholder(true)
+  }
+
+  const handleSubmit = (event) => {
+    try {
+      const formValues: API.ShelfLife = event.detail.value
+      console.log('[ formValues ] >', formValues)
+    } catch (error) {
+      console.log(error)
+      showToast('哎呀，好像出现了什么脏东西，刷新页面重试')
+    }
   }
 
   return (
     <Layout>
-      <Form ref={formRef} defaultValues={defaultForm} labelAlign='right'>
+      <Form ref={formRef} defaultValues={defaultForm} labelAlign='right' onSubmit={handleSubmit}>
         <Form.Item name='id' noStyle></Form.Item>
         <View className='header-title'>基础信息</View>
         <Cell.Group inset>
           <Field label='物品名称' name='name' required rules={[{ required: true, message: '请填写物品名称' }]}>
             <Input placeholder='物品名称' />
+          </Field>
+          <Field label='分类' name='typeId' isLink clickable>
+            {(controller) => <RSelect {...controller} title='分类' placeholder='请选择分类' options={typeOptions} />}
           </Field>
         </Cell.Group>
 
@@ -67,6 +94,34 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
             )}
           </Field>
         </Cell.Group>
+
+        <View className='header-title'>其它信息</View>
+        <Cell.Group inset>
+          <Field label='备注' name='remark'>
+            {(controller) => (
+              // 把textarea组件化，因为微信小程序的placeholder不支持line-height
+              <View className={cx('textarea-content')}>
+                <View className={cx('textarea-placeholder', { hide: controller.value.length > 0 })}>请输入留言</View>
+                <Textarea {...controller} onChange={(e) => onFieldChange('remark', e.detail.value, controller)} />
+              </View>
+            )}
+          </Field>
+        </Cell.Group>
+
+        <FixedView className={cx('fixed-view')} position='bottom' safeArea='bottom' placeholder>
+          <Flex className={cx('fixed-view-options')} justify='center' gutter={12}>
+            <Flex.Item span={6}>
+              <Button color='danger' block onClick={onResetForm}>
+                重置
+              </Button>
+            </Flex.Item>
+            <Flex.Item span={18}>
+              <Button color='primary' block formType='submit'>
+                保存
+              </Button>
+            </Flex.Item>
+          </Flex>
+        </FixedView>
       </Form>
     </Layout>
   )

@@ -7,8 +7,29 @@
   padding: 32rpx 25rpx;
 }
 
-.calculate-shelf-life-popup {
-  width: calc(100% - 40px);
-  .content {
+.textarea-content {
+  position: relative;
+  width: 100%;
+  .textarea-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: rgba(69, 90, 100, 0.6);
+    line-height: 48rpx;
+  }
+  :global {
+    .taroify-textarea {
+      height: 280rpx;
+    }
+  }
+}
+
+.fixed-view {
+  background-color: #fff;
+  padding-top: 20rpx;
+  .fixed-view-options {
+    padding: 0 40rpx;
   }
 }

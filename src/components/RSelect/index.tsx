@@ -1,12 +1,10 @@
-import { classNameBind } from '@/utils/classnamesBind'
+import { cx } from '@/utils/classnamesBind'
 import { isArray, isString } from '@/utils/validate'
 import { Cell, Input, Navbar, Popup, SafeArea } from '@taroify/core'
 import { ScrollView } from '@tarojs/components'
 import { useSafeState } from 'ahooks'
 import { forwardRef, useEffect } from 'react'
-import styles from './index.less'
-
-const cx = classNameBind(styles)
+import './index.less'
 
 type ValueType = string | string[] | undefined
 
@@ -33,21 +31,6 @@ const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
 
   const [visible, setVisible] = useSafeState(false)
   const [selectedValue, setSelectedValue] = useSafeState<string[]>([])
-
-  const updateValue = () => {
-    if (multi) {
-      if (Array.isArray(value)) {
-        setSelectedValue(value)
-        return
-      }
-    } else {
-      if (isString(value)) {
-        setSelectedValue([value])
-        return
-      }
-    }
-    setSelectedValue([])
-  }
 
   const formatValue = (values: ValueType) => {
     if (isString(values)) {
@@ -79,9 +62,30 @@ const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
     setVisible(false)
   }
 
+  const updateValue = () => {
+    if (multi) {
+      if (Array.isArray(value)) {
+        setSelectedValue(value)
+        return
+      }
+    } else {
+      if (isString(value)) {
+        setSelectedValue([value])
+        return
+      }
+    }
+    setSelectedValue([])
+  }
+
   useEffect(() => {
     updateValue()
   }, [value])
+
+  useEffect(() => {
+    if (!multi && selectedValue.length > 0) {
+      handleConfirm()
+    }
+  }, [selectedValue, multi])
 
   return (
     <>
@@ -94,16 +98,16 @@ const RSelect = forwardRef<RSelectRef, RSelectProps>((props, ref) => {
       />
       <Popup className='r-select-popup' open={visible} rounded placement='bottom' onClose={setVisible}>
         <Navbar className='r-select-navbar'>
-          <Navbar.NavLeft icon={false}>取消</Navbar.NavLeft>
+          {multi && <Navbar.NavLeft icon={false}>取消</Navbar.NavLeft>}
           <Navbar.Title>{title}</Navbar.Title>
-          <Navbar.NavRight onClick={handleConfirm}>确认</Navbar.NavRight>
+          {multi && <Navbar.NavRight onClick={handleConfirm}>确认</Navbar.NavRight>}
         </Navbar>
         <ScrollView className='r-select-content' scrollY>
           <Cell.Group>
             {options?.map((item) => {
               return (
                 <Cell
-                  className={cx(selectedValue.includes(item.value) && 'active')}
+                  className={cx({ active: selectedValue.includes(item.value) })}
                   key={item.value}
                   onClick={() => handleSelect(item)}>
                   {item.label}

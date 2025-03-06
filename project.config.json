@@ -2,7 +2,7 @@
   "miniprogramRoot": "./dist",
   "projectname": "raindropApp",
   "description": "博客项目",
-  "appid": "touristappid",
+  "appid": "wxb2d42570cc83ec64",
   "setting": {
     "urlCheck": true,
     "es6": false,

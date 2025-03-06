@@ -1,10 +1,22 @@
-import classNames from 'classnames/bind'
-
 /**
- * 绑定样式
- * @param styles 样式文件
- * @returns classNames
+ * class 类拼接
+ * @param args 可以是字符串、对象或数组
+ * @returns 拼接后的类名字符串
  */
-export function classNameBind(styles: CSSModuleClasses) {
-  return classNames.bind(styles)
+export function cx(...args: (string | Boolean | Record<string, boolean> | string[])[]): string {
+  const classes: string[] = []
+  for (const arg of args) {
+    if (typeof arg === 'string') {
+      classes.push(arg)
+    } else if (Array.isArray(arg)) {
+      classes.push(...arg.filter(Boolean))
+    } else if (typeof arg === 'object') {
+      for (const key in arg) {
+        if (arg[key]) {
+          classes.push(key)
+        }
+      }
+    }
+  }
+  return classes.join(' ')
 }

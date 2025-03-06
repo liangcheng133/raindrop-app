@@ -34,7 +34,7 @@ const BackIcon = <Icon classPrefix='rd icon-left' />
 const Layout = React.forwardRef<LayoutRef, LayoutProps>((props, ref) => {
   const pages = getCurrentPages()
   const currentPage = pages[0] as PageInstance
-  console.log('[ currentPage ] >', currentPage)
+  // console.log('[ currentPage ] >', currentPage)
 
   const isCanGoHome = pages.length === 1 && currentPage?.route !== HOME_PAGE_ROUTE
 
