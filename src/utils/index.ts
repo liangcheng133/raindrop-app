@@ -75,3 +75,78 @@ export function showToast(res: ShowToastProps, mask = false) {
 export function printTimeConsuming(msg: String, start: Date, end: Date) {
   console.log(`${msg} 耗时：${end.getTime() - start.getTime()}ms`)
 }
+
+/**
+ * 将对象拼接到URL的查询字符串中
+ * @param {string} url 基础URL
+ * @param {Object} params 查询参数对象，属性值为空时不拼接
+ * @returns 拼接后的完整URL
+ */
+export function appendQueryParams(url: string, params?: Object) {
+  if (!params || !isObject(params)) {
+    return url
+  }
+
+  const queryString = Object.keys(params)
+    .map((key) => {
+      const value = params[key]
+      if (value === null || value === undefined) {
+        return ''
+      }
+      return `${key}=${value}`
+    })
+    .filter(Boolean)
+    .join('&')
+
+  if (queryString) {
+    return `${url}${url.includes('?') ? '&' : '?'}${queryString}`
+  }
+
+  return url
+}
+
+/**
+ * 解析URL中的查询参数
+ * @param {String} url 完整URL
+ * @returns 包含查询参数的对象
+ */
+export function parseQueryParams(url: string) {
+  const queryParams = {}
+  const urlObj = new URL(url)
+  urlObj.searchParams.forEach((value, key) => {
+    queryParams[key] = value
+  })
+  return queryParams
+}
+
+/**
+ * 解析URL并返回包含url和params属性的对象
+ * @param {String} fullUrl 完整URL
+ * @returns {Object} 包含url和params属性的对象
+ */
+export function parseUrlAndParams(fullUrl: string) {
+  const queryIndex = fullUrl.indexOf('?')
+  let url = fullUrl
+  let queryString = ''
+
+  if (queryIndex !== -1) {
+    url = fullUrl.substring(0, queryIndex)
+    queryString = fullUrl.substring(queryIndex + 1)
+  }
+
+  const params = {}
+  if (queryString) {
+    const pairs = queryString.split('&')
+    pairs.forEach((pair) => {
+      const [key, value] = pair.split('=')
+      if (key) {
+        params[key] = value || ''
+      }
+    })
+  }
+
+  return {
+    url: url,
+    params: params
+  }
+}

@@ -1,7 +1,7 @@
 export default defineAppConfig({
   pages: [
+    'pages/shelfLife/manage',
     'pages/shelfLife/index',
-    'pages/index/index',
   ],
   window: {
     backgroundTextStyle: 'light',

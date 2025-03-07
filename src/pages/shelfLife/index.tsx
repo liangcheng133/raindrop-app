@@ -1,11 +1,10 @@
-import { Layout, RDatetimePicker } from '@/components'
+import { Layout, RDatetimePicker, RTextarea } from '@/components'
 import RSelect from '@/components/RSelect'
 import { showToast } from '@/utils'
 import { cx } from '@/utils/classnamesBind'
-import { Button, Cell, Field, FixedView, Flex, Form, Input, Textarea } from '@taroify/core'
+import { Button, Cell, Field, FixedView, Flex, Form, Input } from '@taroify/core'
 import { FormController, FormInstance } from '@taroify/core/form'
 import { View } from '@tarojs/components'
-import { useSafeState } from 'ahooks'
 import React, { useRef } from 'react'
 import './index.less'
 
@@ -23,21 +22,16 @@ const typeOptions = [
   { label: '宠物', value: 'cw' }
 ]
 
-/** 保质期管理 */
+/** 保质期新增/编辑 */
 const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
-  const [showPlaceholder, setShowPlaceholder] = useSafeState<boolean>(true)
   const formRef = useRef<FormInstance>()
 
   const onFieldChange = (name: string, value: any, controller?: FormController<any>) => {
-    if (name === 'remark') {
-      setShowPlaceholder(value.length === 0)
-    }
     controller?.onChange?.(value)
   }
 
   const onResetForm = () => {
     formRef?.current?.reset()
-    setShowPlaceholder(true)
   }
 
   const handleSubmit = (event) => {
@@ -77,7 +71,8 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
             required
             isLink
             clickable
-            rules={[{ required: true, message: '请填写过期天数' }]}>
+            rules={[{ required: true, message: '请填写过期天数' }]}
+          >
             {(controller) => (
               <RSelect {...controller} title='过期天数' placeholder='请选择过期天数' options={dayOptions} />
             )}
@@ -88,7 +83,8 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
             required
             isLink
             clickable
-            rules={[{ required: true, message: '请填写过期日期' }]}>
+            rules={[{ required: true, message: '请填写过期日期' }]}
+          >
             {(controller) => (
               <RDatetimePicker {...controller} title='过期日期' placeholder='请选择过期日期' type='date' />
             )}
@@ -98,13 +94,7 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
         <View className='header-title'>其它信息</View>
         <Cell.Group inset>
           <Field label='备注' name='remark'>
-            {(controller) => (
-              // 把textarea组件化，因为微信小程序的placeholder不支持line-height
-              <View className={cx('textarea-content')}>
-                <View className={cx('textarea-placeholder', { hide: controller.value.length > 0 })}>请输入留言</View>
-                <Textarea {...controller} onChange={(e) => onFieldChange('remark', e.detail.value, controller)} />
-              </View>
-            )}
+            {(controller) => <RTextarea {...controller} placeholder='请输入留言' autoHeight />}
           </Field>
         </Cell.Group>
 

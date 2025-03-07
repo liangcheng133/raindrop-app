@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '物品管理',
+  navigationBarTitleText: '新增物品',
   navigationStyle: 'custom'
 })
 

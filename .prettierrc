@@ -7,11 +7,9 @@
   "bracketSpacing": true,
   "jsxSingleQuote": true,
   "proseWrap": "preserve",
-  "jsxBracketSameLine": true,
+  "jsxBracketSameLine": false,
   "printWidth": 120,
   "trailingComma": "none",
   "htmlWhitespaceSensitivity": "ignore",
-  "bracketSameLine": false,
-  "overrides": [{ "files": ".prettierrc", "options": { "parser": "json" } }],
-  "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-packagejson"]
+  "bracketSameLine": false
 }

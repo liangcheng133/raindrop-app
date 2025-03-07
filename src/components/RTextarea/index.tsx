@@ -25,7 +25,7 @@ const RTextarea = forwardRef<RTextareaRef, RTextareaProps>((props, ref) => {
 
   useEffect(() => {
     setValue(propsValue || '')
-  }, [propsValue])
+  }, [propsValue, setValue])
 
   return (
     <View className={cx('textarea-content')}>
