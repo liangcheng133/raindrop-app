@@ -1,10 +1,11 @@
 import { Layout } from '@/components'
+import { login } from '@/services/User'
 import { appendQueryParams } from '@/utils'
 import { FloatingBubble, PullRefresh } from '@taroify/core'
 import { View } from '@tarojs/components'
 import Taro, { usePageScroll } from '@tarojs/taro'
 import { useSafeState } from 'ahooks'
-import React from 'react'
+import React, { useEffect } from 'react'
 import './manage.less'
 
 /** 保质期管理 */
@@ -20,6 +21,19 @@ const ShelfLifeManage: React.FC<React.PropsWithChildren> = (props) => {
   }
 
   usePageScroll(({ scrollTop }) => setReachTop(scrollTop === 0))
+
+  useEffect(() => {
+    login({
+      account: 'admin',
+      password: '123456'
+    })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log('登录失败', err)
+      })
+  }, [])
 
   return (
     <Layout>

@@ -1,4 +1,20 @@
 declare namespace API {
+  /** 基础响应 */
+  export type BasicResponse<T> = {
+    status: number
+    msg: string
+    data: T
+  }
+  /** 成功响应信息 */
+  export type SuccessResponse = BasicResponse<null>
+  /** 错误响应信息 */
+  export type ErrorResponse = BasicResponse<null> & {
+    errMsg: string
+  }
+  export type BasicParams = {
+    current?: number
+    count?: number
+  }
   /** 通用字段 */
   export type BasicField = {
     remark?: string

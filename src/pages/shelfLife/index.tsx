@@ -40,7 +40,7 @@ const ShelfLifeIndex: React.FC<React.PropsWithChildren> = (props) => {
       console.log('[ formValues ] >', formValues)
     } catch (error) {
       console.log(error)
-      showToast('哎呀，好像出现了什么脏东西，刷新页面重试')
+      showToast('哎呀，好像出了点问题，刷新页面重试')
     }
   }
 
