@@ -1,5 +1,6 @@
 export default defineAppConfig({
   pages: [
+    'pages/guestUser/login',
     'pages/shelfLife/manage',
     'pages/shelfLife/index',
   ],
