@@ -58,6 +58,7 @@
     "@tarojs/taro": "3.6.35",
     "ahooks": "^3.8.4",
     "dayjs": "^1.11.13",
+    "jsencrypt": "^3.3.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
