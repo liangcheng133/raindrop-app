@@ -1,6 +1,6 @@
 import { RFlex } from '@/components'
 import { GuestUser } from '@/services'
-import { Button, Input } from '@taroify/core'
+import { Button, Input, Radio } from '@taroify/core'
 import { View } from '@tarojs/components'
 import { useSetState } from 'ahooks'
 import React from 'react'
@@ -20,7 +20,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ ...rest }) => {
   const [form, setForm] = useSetState<FormState>({})
 
   const onSubmit = () => {
-    GuestUser.accountLogin(form).then(res => {
+    GuestUser.login(form).then((res) => {
       console.log('[ 会员 ] >', res)
     })
     console.log(form)
@@ -29,12 +29,12 @@ const AccountForm: React.FC<AccountFormProps> = ({ ...rest }) => {
   return (
     <View className='form-container' {...rest}>
       <View className='form-item'>
-        <View className='form-label'>账号</View>
+        <View className='form-label'>账号/手机号</View>
         <RFlex className='form-input'>
           <View className='rd icon-user'></View>
           <Input
             className='input'
-            placeholder='请输入账号'
+            placeholder='请输入账号/手机号'
             value={form.account}
             onInput={(e) => setForm({ account: e.detail.value })}
           />
@@ -53,6 +53,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ ...rest }) => {
           />
         </RFlex>
       </View>
+      <Radio className='remember' shape='square'>记住我</Radio>
       <Button block color='primary' size='large' onClick={onSubmit}>
         登录
       </Button>
